@@ -7,13 +7,14 @@ type RawData = { Date: string; Amount: string; Balance: string; Description: str
 export const POST: RequestHandler = async ({ request }) => {
 	// create json from csv file input
 	const formData = Object.fromEntries(await request.formData());
-	const { file } = formData as { file: File };
+	const file = formData.file as File;
 
 	// Check file type
 	if (file.type !== 'text/csv') {
 		return json({ error: 'Invalid file type. Please upload a CSV file.' }, { status: 400 });
 	}
 
+	// convert data
 	const fileData = await file.text();
 	const jsonData = await csv().fromString(fileData);
 
